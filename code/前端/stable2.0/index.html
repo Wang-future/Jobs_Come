@@ -1,0 +1,111 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>招聘统计平台</title>
+<link href="css/css.css" rel="stylesheet" type="text/css" />
+<link href="css/reset.min.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+<div class="nav clear">
+<ul class="clear">
+<li><a href="">help</a></li>
+
+</ul>
+</div>
+<div class="search1">
+<div class="imglog">
+<!--<img src="img/name.png" />-->
+    <div>招聘统计</div>
+</div>
+<div>
+<input id="myId"  type="text" class="txtingput" placeholder="Type to search" />
+<input type="button" class="txtbutton"  onclick="submitFn(this, event)" value="查询">
+
+</div>
+</div >
+<div class="imglist1">
+<ul class="clear" id="parentUl">
+<!--<li><a href=""><img src="img/1.jpg" /><span>PPT模板</span></a></li>-->
+    <!--<li><a href=""><img src="img/1.jpg" /><span>PPT模板</span></a></li>-->
+    <!--<li><a href=""><img src="img/1.jpg" /><span>PPT模板</span></a></li>-->
+    <!--<li><a href=""><img src="img/1.jpg" /><span>PPT模板</span></a></li>-->
+    <!--<li><a href=""><img src="img/1.jpg" /><span>PPT模板</span></a></li>-->
+    <!--<li><a href=""><img src="img/1.jpg" /><span>PPT模板</span></a></li>-->
+</ul>
+</div>
+</div>
+
+<script src="js/jquery-1.11.0.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+
+	function submitFn(obj, evt){
+    if (typeof(obj) == "undefined") {
+     alert("please sdvdd input your txt");
+}
+
+    var socket;
+		input = document.getElementById("myId");//通过id获取文本框对象
+    value=input.value.trim();
+
+		if(!value.length){
+			alert("please input your txt");
+		}
+		else{
+			//_html += "<b>" + value + "</b>";
+			socket = new WebSocket('ws://110.64.87.175:9000');
+			try {
+
+		                socket.onopen = function (msg) {
+
+												socket.send(value);
+												
+		                };
+
+		                socket.onmessage = function (msg) {
+		                    if (typeof msg.data == "string") {
+		                        addElementImg(obj, msg.data);
+		                    }
+		                    else {
+		                        alert("not txt message");
+		                    }
+		                };
+
+		                socket.onclose = function (msg) {
+
+                     };
+									socket.onerror = function(evt)
+
+										{
+										    alert("WebSocketError!");
+										};
+								}
+		            catch (ex) {
+		                log(ex);
+		            }
+			}
+	}
+  function addElementImg(obj, str) {
+　　　　var ul = document.getElementById("parentUl");
+
+　　　　//添加 li
+　　　　var li = document.createElement("li");
+
+　　　　//添加 img
+　　　　var img = document.createElement("img");
+
+　　　　//设置 img 属性，如 id
+　　　　//img.setAttribute("id", "newImg");
+    if (typeof str != "string") {
+        alert("it is not string")
+    }
+　　　　//设置 img 图片地址
+　　　　img.src =str;
+
+ul.appendChild(img);
+　　}
+</script>
+
+</body>
+</html>
