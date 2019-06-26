@@ -11,4 +11,13 @@ import scrapy
 class RencaiItem(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
+    COMPANY = scrapy.Field()
+    DIPLOMA = scrapy.Field()
+    NUMBER = scrapy.Field()
+    DATE = scrapy.Field()
+    SUPPLEMENT = scrapy.Field()
+    POSITIONTYPE = scrapy.Field()
+    KETWORD = scrapy.Field()
+    EXPERIENCE = scrapy.Field()
+    SALARY = scrapy.Field()
     pass
