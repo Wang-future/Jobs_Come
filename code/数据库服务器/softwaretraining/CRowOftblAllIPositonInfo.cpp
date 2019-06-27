@@ -1,6 +1,6 @@
 #include"CRowOfDBTable.h"
 void CRowOftblAllIPositonInfo::Initialization(int _date, string _company, string _workplaceprovince, string _workplacecity
-  , string _diploma, short _number, string _supplement, string _positiontype, string _keyword, int _experience)
+  , string _diploma, short _number, string _supplement, string _positiontype, string _keyword, int _experience,int _salary)
 {
   this->date = _date;
   this->company = _company;
@@ -12,4 +12,5 @@ void CRowOftblAllIPositonInfo::Initialization(int _date, string _company, string
   this->positiontype = _positiontype;
   this->keyword = _keyword;
   this->experience = _experience;
+  this->salary = _salary;
 }

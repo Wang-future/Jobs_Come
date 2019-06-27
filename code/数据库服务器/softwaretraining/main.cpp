@@ -7,6 +7,7 @@
 #include"CConnectWithScrapyServer.h"
 #include "stdafx.h"
 #include<string>
+#include<fstream>
 
 #include"CDBManage.h"
 #include<thread>
@@ -104,12 +105,17 @@ void Thread_Fun_Call_DistributionData()
 
 int main(void)
 {
- 
-  CDBManage* my = CDBManage::get_instance();
+  /*CConnectWithScrapyServer server;
+  server.MyStartService(DB_SERVER_IP, DB_SERVER_PORT);*/
+ /*CDBManage* my = CDBManage::get_instance();
   CDataParse* myd = CDataParse::get_instance();
-
-  my->DataInsert(myd->CreateJson());
-  std::thread thread_call(Thread_Fun_Call_DistributionData);
+  string l = myd->CreateJson();
+  cout << l;*/
+  CConnectWithScrapyServer server;
+  server.MyStartService(DB_SERVER_IP, DB_SERVER_PORT);
+  //my->DataInsert(myd->CreateJson());
+ /* std::thread thread_call(Thread_Fun_Call_DistributionData);
   thread_call.join();
+  */
   system("pause");
 }

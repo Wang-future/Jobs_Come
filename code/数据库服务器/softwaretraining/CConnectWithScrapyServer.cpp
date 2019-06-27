@@ -50,6 +50,7 @@ int CConnectWithScrapyServer::MyStartService(const std::string ip, const std::st
   printf("listening...\n\n");
   while (1)
   {
+    static int times = 0;
     SOCKADDR addr_Client;
     int len = sizeof(addr_Client);
     SOCKET socket_Client = accept(socket_Server, &addr_Client, &len);
@@ -59,25 +60,49 @@ int CConnectWithScrapyServer::MyStartService(const std::string ip, const std::st
       // 发送
      // char szTmp[] = "Server:This is Server!\n\n";
       //send(socket_Client, szTmp, strlen(szTmp) + 1, 0);
-
+      //如果有客户端连接 就一直接收客户端发送的数据 直到客户端断开
+      while(true)
+      { 
       // 接收
       char revBuf[1024] = { 0 };
-      recv(socket_Client, revBuf, sizeof(revBuf), 0);
-    
+      int i_recv = recv(socket_Client, revBuf, sizeof(revBuf), 0);
+      if (i_recv < 0)
+      {
+        CDBManage* instance = CDBManage::get_instance();
+        instance->FailedRecord("recv from" + (string)inet_ntoa(((SOCKADDR_IN*)&addr_Client)->sin_addr )+ " error!");
+      }
+        //对方断开练级诶
+      if (0 == i_recv)
+        break;
+      
       //将接收到的数据转化为string类型，并
 #ifdef DEBUG_
       printf("%s\n", revBuf);
 #endif
       string str_data = revBuf;
+      
+      for (int i = 0; i < str_data.size(); ++i)
+      {
+        if (str_data[i] == '\'')
+          str_data[i] = '\"';
+      }
       std::cout << str_data;
       CDBManage* temp = CDBManage::get_instance();
-      temp->DataInsert(str_data);
-     // printf("%s\n\n", revBuf);
-
+      bool b_insert=temp->DataInsert(str_data);
+      //插入失败
+      if (!b_insert)
+      {
+        ++times;
+        cout << "\n第" + std::to_string(times) + "条错误记录出现，记录在" + PATH_OF_THE_FILE_TO_RECORD_THE_FAILED_INSERRT + ",请前往查看。\n";
+      }
     }
 
-    // 关闭
-    closesocket(socket_Client);
+    if(send(socket_Client, "success", 8,0)<0)
+    {
+      cout << "send chucuo!";
+      
+    }
+    }
   }
 
   // 关闭

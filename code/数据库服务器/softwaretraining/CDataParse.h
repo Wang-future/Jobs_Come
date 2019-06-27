@@ -39,6 +39,18 @@ public:
   //参数不可以为 NULL；
   //--------------------------------------------------------------------------------------
   bool DataParse(CRowOftblAllIPositonInfo& obj,const std::string& info);
+  //--------------------------------------------------------------------------------------
+  // 函数名称： DataCheck
+  // 函数描述： 将解析后的数据进行合法性验证
+  // 其他说明：
+  // 参数说明：各个参数分别为提取出来的属性
+
+  // 返回结果： bool 
+  //相关说明
+  //参数不可以为 NULL；
+  //--------------------------------------------------------------------------------------
+  bool DataCheck(int _date, string _company, string _workplace, string _diploma,
+    short _number, string _supplement, string _positiontype, string _keyword, int _experience, int _salary);
 #ifdef DEBUG_
   // 调试函数 创建json对象进行调试
   std::string CreateJson();

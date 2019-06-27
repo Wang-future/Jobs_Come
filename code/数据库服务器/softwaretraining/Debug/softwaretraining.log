@@ -1,2 +1,3 @@
-﻿  CDBManage.cpp
+﻿  CConnectWithScrapyServer.cpp
+e:\vsproject\softwaretraining\softwaretraining\cconnectwithscrapyserver.cpp(77): warning C4018: “<”: 有符号/无符号不匹配
   softwaretraining.vcxproj -> E:\vsproject\softwaretraining\Debug\softwaretraining.exe
