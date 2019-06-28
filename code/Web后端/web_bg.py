@@ -11,8 +11,11 @@ import hashlib
 import struct
 
 # ====== config ======
+
+#web后端ip 这里的ip改动 需要同时配置改动前端相关代码绑定的ip+port
 HOST = 'localhost'
-PORT = 3368
+#web后端端口
+PORT = 9000
 MAGIC_STRING = '258EAFA5-E914-47DA-95CA-C5AB0DC85B11'
 HANDSHAKE_STRING = "HTTP/1.1 101 Switching Protocols\r\n" \
                    "Upgrade:websocket\r\n" \
@@ -29,19 +32,21 @@ class Th(threading.Thread):
 
     def run(self):
         while True:
-
-            #self.send_data("hello")
             str=self.recv_data(1024)
             if not str:
                 continue
-            print(str)
-            send_str="img/show1.jpg"
-            self.con.send(self.write_msg(send_str))
-            self.con.send(self.write_msg("img/show2.jpg"))
-            self.con.send(self.write_msg("img/show3.png"))
-            self.con.send(self.write_msg("img/show4.png"))
-            self.con.send(self.write_msg("img/show5.png"))
-           
+            #str为从前端获取到的用户输入的文本，编码应该是utf-8 可以打印长度自行确认下
+            #print("\n字符长度:")
+            #print(len(str))
+            else:
+                # put you code here
+                # according to the input of user
+                # Generate visualized images
+                # and send the path of images to the html
+                # the following is one example
+                 send_str="img/show1.jpg"
+                 self.con.send(self.write_msg(send_str))
+
             self.con.close()
 
 
@@ -70,7 +75,7 @@ class Th(threading.Thread):
                 data = all_data[6:]
             raw_str = ""
             i = 0
-            print(len(data))
+            #print(len(data))
             for d in data:
                 raw_str += chr(d ^ masks[i % 4])
                 i += 1
@@ -92,10 +97,10 @@ class Th(threading.Thread):
         else:
             token += struct.pack("!BQ", 127, length).decode()
         # struct为Python中处理二进制数的模块，二进制流为C，或网络流的形式。
-        data = '%s%s' % (token, data)
+        # data = '%s%s' % (token, data)
         #self.con.send(data.encode())
         #print(len(data))
-        print(data)
+        # print(data)
         return True
 
     def write_msg(self,message):
@@ -150,10 +155,10 @@ def new_service():
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
-        sock.bind(('110.64.87.175', 9000))
+        sock.bind((HOST, PORT))
         sock.listen(1000)
         # 链接队列大小
-        print("bind 9000,ready to use")
+        print("bind "+str(PORT)+",ready to use")
     except:
         print("Server is already running,quit")
         sys.exit()
@@ -167,7 +172,7 @@ def new_service():
             try:
                 t = Th(connection)
                 t.start()
-                print('new thread for client ...')
+                print('new thread for client ...\n')
             except:
                 print('start new thread error')
                 connection.close()

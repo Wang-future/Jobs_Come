@@ -59,13 +59,13 @@ bool CDBManage::CreatTable(CRowOftblAllIPositonInfo& obj)
   bool b_createtable = false;
   string sql = "CREATE TABLE " + obj.company +
     "(ID INT PRIMARY KEY NOT NULL AUTO_INCREMENT, "
-    "WORKPLACEPROVINCE VARCHAR(8) NOT NULL,"
-    "WORKPLACECITY VARCHAR(8) NOT NULL,"
-    "DIPLOMA VARCHAR(5) NOT NULL,"
+    "WORKPLACEPROVINCE VARCHAR(30) NOT NULL,"
+    "WORKPLACECITY VARCHAR(30) NOT NULL,"
+    "DIPLOMA VARCHAR(16) NOT NULL,"
     "NUMBER SMALLINT NOT NULL,"
     "DATE INT NOT NULL,"
-    "POSITIONTYPE VARCHAR(20) NOT NULL,"
-    "KEYWORD VARCHAR(20) NOT NULL,"
+    "POSITIONTYPE VARCHAR(30) NOT NULL,"
+    "KEYWORD VARCHAR(50) NOT NULL,"
     "EXPERIENCE INT NOT NULL,"
     "SALARY INT NOT NULL)";
   bool b_insertinto_createdtable = false;
@@ -76,7 +76,7 @@ bool CDBManage::CreatTable(CRowOftblAllIPositonInfo& obj)
     db.commit();
     b_createtable = true;
     otl_stream o(1, // PostgreSQL 8.1 and higher, the buffer can be > 1
-      "insert into testcreatedtable values(:f1<int>,:f2<char[31]>)",
+      "insert into testtbl_createdtable values(:f1<int>,:f2<char[61]>)",
       // INSERT statement
       db // connect object
     );
@@ -184,15 +184,15 @@ bool CDBManage::DataInsert(const std::string str_data)
     
     otl_stream o(1, // PostgreSQL 8.1 and higher, the buffer can be > 1
       "insert into testtbl_AllPositionInfo values(:ID<int>,\
-      :COMPONY<char[16]>,\
-      :WORKPLACEPROVINCE<char[9]>,\
-      :WORKPLACECITY<char[9]>,\
-      :DIPLOMA<char[6]>,\
+      :COMPONY<char[61]>,\
+      :WORKPLACEPROVINCE<char[31]>,\
+      :WORKPLACECITY<char[31]>,\
+      :DIPLOMA<char[17]>,\
       :NUMBER<short>,\
       :DATE<int>,\
       :SUPPLEMENT<char[1001]>,\
-      :POSITIONTYPE<char[21]>,\
-      :KEYWORD<char[21]>,\
+      :POSITIONTYPE<char[31]>,\
+      :KEYWORD<char[51]>,\
       :EXPERIENCE<int>,\
       :SALARY<INT>)",
       // INSERT statement
@@ -202,8 +202,8 @@ bool CDBManage::DataInsert(const std::string str_data)
     insert_into_AllPositionInfo = true;
 
    
-    string sql_insert_companytable = "insert into " + g_crow.company + " values(:ID<int>,:WORKPLACEPROVINCE<char[9]>,:WORKPLACECITY<char[9]>,:DIPLOMA<char[6]>,:NUMBER<short>,:DATE<int>,:POSITIONTYPE<char[21]>,\
-    :KEYWORD<char[21]>,:EXPERIENCE<int>,:SALARY<int>)";
+    string sql_insert_companytable = "insert into " + g_crow.company + " values(:ID<int>,:WORKPLACEPROVINCE<char[31]>,:WORKPLACECITY<char[31]>,:DIPLOMA<char[17]>,:NUMBER<short>,:DATE<int>,:POSITIONTYPE<char[31]>,\
+    :KEYWORD<char[51]>,:EXPERIENCE<int>,:SALARY<int>)";
     otl_stream o1(1, // PostgreSQL 8.1 and higher, the buffer can be > 1
       sql_insert_companytable.c_str(),
       // INSERT statement
@@ -245,23 +245,32 @@ bool  CDBManage::DistributionData()
 }
 bool CDBManage::IsTheTableExisted(const string & tablename)
 {
-  otl_stream i(50, // buffer size may be > 1
-    "select 1 from testCreatedTable "
-    "where TABLENAME = (:f12<char[31]>)"
-    "limit 1",
-    db // connect object
-  );
-  i << tablename;
-  int i_retvalue;
-  i >> i_retvalue;
-  if (i_retvalue == 1)
-    return true;
-  //没有这个表
-  return false;
+  try {
+    otl_stream i(50, // buffer size may be > 1
+      "select 1 from testtbl_createdtable "
+      "where TABLENAME = (:f12<char[61]>)"
+      "limit 1",
+      db // connect object
+    );
+    i << tablename;
+    int i_retvalue;
+    i >> i_retvalue;
+    if (i_retvalue == 1)
+      return true;
+    //没有这个表
+    return false;
+  }
+  catch (otl_exception& p) { // intercept OTL exceptions
+    cerr << p.msg << endl; // print out error message
+    cerr << p.stm_text << endl; // print out SQL that caused the error
+    cerr << p.var_info << endl; // print out the variable that caused the error
+    
+    return false;
+  }
 }
 void CDBManage::FailedRecord(const string & record)
 {
-  
+  static int index = 1;
   SYSTEMTIME st = { 0 };
   GetLocalTime(&st);
   printf("%d-%02d-%02d %02d:%02d:%02d\n",
@@ -271,7 +280,8 @@ void CDBManage::FailedRecord(const string & record)
     st.wHour,
     st.wMinute,
     st.wSecond);
-  string str_data = record + "\n时间：" + std::to_string(st.wYear) + "-" + std::to_string(st.wMonth) + "-" + std::to_string(st.wDay) + "-" + std::to_string(st.wHour)+  "\n失败原因:"+ g_failed_reason+"\n";
+  string str_data = "------------------------------------------------------------\n第"+std::to_string(index++)+"记录\n 内容为:"+record+"\n时间：" + std::to_string(st.wYear) + "-" + std::to_string(st.wMonth) + "-" + std::to_string(st.wDay) + "-" + std::to_string(st.wHour)+  "\n失败原因:"+ g_failed_reason +
+    "\n------------------------------------------------------------\n";
   ofstream file(PATH_OF_THE_FILE_TO_RECORD_THE_FAILED_INSERRT, ios::app);
   if (file.is_open())
   {
