@@ -5,6 +5,7 @@ from scrapy.spiders import CrawlSpider, Rule
 import re
 import time
 import cpca
+import  string
 from Zhuobo.items import ZhuoboItem
 
 
@@ -41,11 +42,29 @@ class ZhuoborencaiSpider(scrapy.Spider):
         # for each in response.xpath("//body[@class='home_company']"):
             item = ZhuoboItem()
             # 公司名
-            company = response.xpath("//div[@class='info clearfix']/div[2]/h2/text()").extract()
+            compa = response.xpath("//div[@class='info clearfix']/div[2]/h2/text()").extract()
+            company = ''.join(compa)
             if company==[]:
                 item['COMPANY'] = '某能力有限公司'
             else:
-                item['COMPANY'] =company[0]
+                if company.find("（") == -1:
+                    item['COMPANY'] = compa[0]
+                else:
+                    com1 = company.split("（")
+                    com2 = ''.join(com1)
+                    com3 = com2.split("）")
+                    com4 = ''.join(com3)
+                    #item['COMPANY'] = com4.split("\r\n")[0]
+                    if com4.find("(") ==-1:
+                        item['COMPANY'] = com4.split("\r\n")[0]
+                    else:
+                        com5 = com4.split("(")
+                        com6 =''.join(com5)
+                        com7 = com6.split(")")
+                        com8 =''.join(com7)
+                        item['COMPANY'] = com8.split("\r\n")[0]
+
+
             # 工作地点
             workplace = response.xpath("//div[@class='tab_map_title']/text()").extract()[0]
             df = cpca.transform([workplace])
@@ -71,7 +90,13 @@ class ZhuoborencaiSpider(scrapy.Spider):
             # date = response.xpath("//div[@class='name_pos']/div[1]/dl[4]/dd[1]/text()").extract()
             item['DATE'] = int(time.time())
             #职位信息
-            item['SUPPLYMENT'] = response.xpath("//div[@class='desc_pos']/text()").extract()
+            supplement = response.xpath("//div[@class='desc_pos']/text()").extract()
+            supply = ' '.join(supplement)
+            if len(supply)>300:
+                supp = supply[0:300]
+            else:
+                supp = supply
+            item['SUPPLEMENT'] = supp
             # 职位名称
             item['POSITIONTYPE'] = response.xpath("//div[@class='name_pos']/h2/span[1]/text()").extract()[0]
             #关键字

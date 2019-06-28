@@ -22,7 +22,7 @@ class ZhuoboItem(scrapy.Item):
     #发布时间
     DATE= scrapy.Field()
     #岗位要求
-    SUPPLYMENT= scrapy.Field()
+    SUPPLEMENT= scrapy.Field()
     # #岗位职责
     # RESPONSIBILITY= scrapy.Field()
     # 职位名

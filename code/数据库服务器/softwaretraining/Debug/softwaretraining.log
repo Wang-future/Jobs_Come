@@ -1,3 +1,10 @@
 ﻿  CConnectWithScrapyServer.cpp
 e:\vsproject\softwaretraining\softwaretraining\cconnectwithscrapyserver.cpp(102): warning C4018: “<”: 有符号/无符号不匹配
+  CDBManage.cpp
+  CDataParse.cpp
+e:\vsproject\softwaretraining\softwaretraining\cdataparse.cpp(49): warning C4018: “<”: 有符号/无符号不匹配
+  CRowOftblAllIPositonInfo.cpp
+  main.cpp
+e:\vsproject\softwaretraining\softwaretraining\main.cpp(66): warning C4018: “<”: 有符号/无符号不匹配
+  正在生成代码...
   softwaretraining.vcxproj -> E:\vsproject\softwaretraining\Debug\softwaretraining.exe
