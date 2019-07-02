@@ -11,7 +11,7 @@
 // 2019-06-01  1.0              Íõ**             Ô­´´
 //------------------------------------------------------------
 #define DEBUG_
-#define DB_SERVER_IP ("192.168.137.1")
+#define DB_SERVER_IP ("127.0.0.1")
 #define DB_SERVER_PORT ("8880")
 #define BEGINTIME_TO_DISTRIBUTE_DATA 1
 #define ENDTIME_TO_DISTRIBUTE_DATA 2
