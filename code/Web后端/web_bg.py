@@ -27,7 +27,7 @@ config = {
                     'db': 'jobs_come'
                 }
 #web后端ip 这里的ip改动 需要同时配置改动前端相关代码绑定的ip+port
-HOST = '110.64.86.209'
+HOST = '127.0.0.1'
 #web后端端口
 PORT = 9000
 MAGIC_STRING = '258EAFA5-E914-47DA-95CA-C5AB0DC85B11'
@@ -112,10 +112,12 @@ class Th(threading.Thread):
                     # 更新键值的访问次数
                     g_d_positontype_to_times[userin]+=1
                     lock_times.write_release()
-                    self.con.send(self.write_msg(("./img/"+userin+"1.png")))
-                    self.con.send(self.write_msg(("./img/"+userin+"2.png")))
-                    self.con.send(self.write_msg(("./img/"+userin+"3.png")))
-                    self.con.send(self.write_msg(("./img/"+userin+"4.png")))
+                    ltime = time.localtime(g_d_positontype_to_date[userin])
+                    timeYMD = time.strftime("%Y-%m-%d", ltime)
+                    self.con.send(self.write_msg(("{\"imgpath\":\"./img/java1.png\",\"date\":\"" + timeYMD + "\"}")))
+                    self.con.send(self.write_msg(("{\"imgpath\":\"./img/java2.png\",\"date\":\"" + timeYMD + "\"}")))
+                    self.con.send(self.write_msg(("{\"imgpath\":\"./img/java3.png\",\"date\":\"" + timeYMD + "\"}")))
+                    self.con.send(self.write_msg(("{\"imgpath\":\"./img/java4.png\",\"date\":\"" + timeYMD + "\"}")))
                 else:
                     lock_date.read_release()
                     con = pymysql.connect(**config)
