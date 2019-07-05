@@ -126,7 +126,11 @@ bool CDataParse::DataCheck(int &_date, string &_company, string &_workplace, str
 bool CDataParse::DataParse(CRowOftblAllIPositonInfo& obj,const std::string& info)
 {
   if (info.empty())
+  {
+    g_failed_reason = "数据为空。";
     return false;
+  }
+    
 
   bool res;
   JSONCPP_STRING errs;
@@ -139,6 +143,8 @@ bool CDataParse::DataParse(CRowOftblAllIPositonInfo& obj,const std::string& info
   res = jsonReader->parse(info.c_str(), info.c_str() + info.length(), &root, &errs);
   if (!res || !errs.empty()) {
     std::cout << "parseJson err. " << errs << std::endl;
+    g_failed_reason = "parseJson err.";
+    return false;
   }
   //提取root中的各个属性
   COMPANY = root["COMPANY"];

@@ -166,7 +166,7 @@ bool CDBManage::DataInsert(const std::string str_data)
   bool b_dataparse=instance->DataParse(g_crow, str_data);
   if (!b_dataparse)
   {
-    g_failed_reason = "该条数据不合法,导致无法解析。" ;
+    g_failed_reason = "数据不合法,导致无法解析:"+ g_failed_reason;
     //记录错误的数据
     FailedRecord(str_data);
     return false;

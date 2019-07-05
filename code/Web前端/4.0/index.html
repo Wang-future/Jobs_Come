@@ -86,7 +86,7 @@ var ab=new zturn({
       text1.innerHTML="";
 			socket = new WebSocket('ws://127.0.0.1:9000');
 			try {
-
+                    alert("正在生成数据，预计需要30s，请稍候！");
 		                socket.onopen = function (msg) {
 
 												socket.send(value);
@@ -94,12 +94,18 @@ var ab=new zturn({
 		                };
 
 		                socket.onmessage = function (msg) {
-		                    if (typeof msg.data == "string") {
-		                        addElementImg(obj, msg.data);
-		                    }
-		                    else {
-		                        alert("not txt message");
-		                    }
+                     // alert(typeof msg.data);
+                     //  alert(msg.data);
+                     //  var reader =new FileReader();
+                     //  var fileObjSlicString=reader.readAsText(msg.data,'utf-8');
+                     //  reader.onload=function(e)
+                     //  {
+                     //    alert(fileObjSlicString);
+                     //         addElementImg(obj, fileObjSlicString);
+                     //  }
+
+                   addElementImg(obj, msg.data);
+
 		                };
 
 		                socket.onclose = function (msg) {
@@ -117,25 +123,25 @@ var ab=new zturn({
 			}
 	}
   function addElementImg(obj, str) {
-    if (typeof str != "string") {
-        alert("it is not string")
-    }
+    if(typeof str !="string")
+      alert("it is not string");
 
+    var obj=JSON.parse(str);
     text1=document.getElementById("zturn");
 
     var first =`<li class="poster-item  zturn-item" data_n="4" style="position: absolute; left: 50%; margin-left: -191px; z-index: 3; opacity: 1; transform: scale(1);">
 
           <div class="for_btn">
-            <img src="`+str+`" width="100%">
+            <img src="`+obj.imgpath+`" width="100%">
 
           </div>
 
           <div class="students_star">
 
-            <p class="cell_list"><span>统计图：<span class="darks">三年数据分析</span></span>
+            <p class="cell_list"><span>数据统计截止至：`+obj.date+`</span>
             </p>
             <div class="zwjs">
-              行业分析总结
+              说明：数据统计中，没有说明薪资、招聘人数的招聘数据未计入统计
             </div>
           </div>
         </li>`
