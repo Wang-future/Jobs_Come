@@ -1,4 +1,4 @@
-# _*_ coding:utf-8 _*_
+﻿# _*_ coding:utf-8 _*_
 __author__ = 'Patrick'
 
 import socket
@@ -90,6 +90,11 @@ g_d_positontype_to_date={}
 g_d_positontype_to_times={}
 lock_date=RWlock()
 lock_times=RWlock()
+#--------------------------------------------------------------------------------------
+# 函数名称： Th
+# 函数描述：新开的线程，负责处理用户请求
+#
+#--------------------------------------------------------------------------------------
 class Th(threading.Thread):
     def __init__(self, connection, ):
         threading.Thread.__init__(self)
@@ -296,6 +301,11 @@ class Th(threading.Thread):
             self.con.close()
 
 
+#--------------------------------------------------------------------------------------
+# 函数名称： recv_data
+# 函数描述：通信协议使用的是websocket 需要根据协议解包
+
+#--------------------------------------------------------------------------------------
 
 
     def recv_data(self, num):
@@ -327,7 +337,13 @@ class Th(threading.Thread):
                 i += 1
             return raw_str
 
-    # send data
+    
+#--------------------------------------------------------------------------------------
+# 函数名称： send_data
+# 函数描述：通信协议使用的是websocket 需要根据协议封包
+
+#--------------------------------------------------------------------------------------
+
     def send_data(self, data):
         if data:
             data = str(data)
@@ -342,11 +358,7 @@ class Th(threading.Thread):
             token += struct.pack("!BH", 126, length).decode()
         else:
             token += struct.pack("!BQ", 127, length).decode()
-        # struct为Python中处理二进制数的模块，二进制流为C，或网络流的形式。
-        # data = '%s%s' % (token, data)
-        #self.con.send(data.encode())
-        #print(len(data))
-        # print(data)
+        
         return True
 
     def write_msg(self,message):
